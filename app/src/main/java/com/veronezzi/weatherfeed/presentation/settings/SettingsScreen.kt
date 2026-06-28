@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.weather.designsystem.components.SectionLabel
@@ -70,6 +71,7 @@ fun SettingsScreen(
             text = "WeatherFeed\nVersão 1.0.0",
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.xl),

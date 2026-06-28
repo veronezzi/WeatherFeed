@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.veronezzi.weatherfeed.domain.model.City
 import com.veronezzi.weatherfeed.presentation.common.UiState
 import com.weather.designsystem.components.CityRow
 import com.weather.designsystem.components.WeatherSearchBar
@@ -38,25 +37,24 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundDark)
-            .padding(horizontal = spacing.md),
+            .background(BackgroundDark),
     ) {
-        Spacer(Modifier.height(spacing.lg))
-        Text(
-            text = "Buscar",
-            style = MaterialTheme.typography.headlineMedium,
-            color = Color.White,
-        )
-        Spacer(Modifier.height(spacing.md))
-
-        WeatherSearchBar(
-            value = query,
-            onValueChange = viewModel::onQueryChange,
-            placeholder = "Buscar cidade ou país...",
-            modifier = Modifier.fillMaxWidth(),
-        )
-
-        Spacer(Modifier.height(spacing.md))
+        Column(modifier = Modifier.padding(horizontal = spacing.md)) {
+            Spacer(Modifier.height(spacing.lg))
+            Text(
+                text = "Buscar",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White,
+            )
+            Spacer(Modifier.height(spacing.md))
+            WeatherSearchBar(
+                value = query,
+                onValueChange = viewModel::onQueryChange,
+                placeholder = "Buscar cidade ou país...",
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(Modifier.height(spacing.md))
+        }
 
         when (val state = uiState) {
             is UiState.Loading -> {
@@ -64,6 +62,7 @@ fun SearchScreen(
                     text = "Buscando...",
                     color = TextSecondary,
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }
             is UiState.Error -> {
@@ -71,6 +70,7 @@ fun SearchScreen(
                     text = state.message,
                     color = Color.Red.copy(alpha = 0.7f),
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = spacing.md),
                 )
             }
             is UiState.Success -> {
@@ -80,9 +80,14 @@ fun SearchScreen(
                         text = "${cities.size} RESULTADOS",
                         color = TextSecondary,
                         style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(horizontal = spacing.md),
                     )
                     Spacer(Modifier.height(spacing.sm))
-                    LazyColumn {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = spacing.md),
+                    ) {
                         items(cities) { city ->
                             CityRow(
                                 cityName = city.name,
@@ -95,6 +100,7 @@ fun SearchScreen(
                             )
                             Spacer(Modifier.height(spacing.sm))
                         }
+                        item { Spacer(Modifier.height(spacing.sm)) }
                     }
                 }
             }

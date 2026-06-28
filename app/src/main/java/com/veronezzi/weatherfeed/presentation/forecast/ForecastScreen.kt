@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.veronezzi.weatherfeed.data.remote.WeatherConditionMapper
@@ -42,18 +43,19 @@ fun ForecastScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundDark)
-            .padding(horizontal = spacing.md),
+            .background(BackgroundDark),
     ) {
-        Spacer(Modifier.height(spacing.lg))
-        SectionLabel(text = "PRÓXIMOS DIAS")
-        Spacer(Modifier.height(spacing.xs))
-        Text(
-            text = "Previsão de 5 dias",
-            style = MaterialTheme.typography.headlineMedium,
-            color = Color.White,
-        )
-        Spacer(Modifier.height(spacing.md))
+        Column(modifier = Modifier.padding(horizontal = spacing.md)) {
+            Spacer(Modifier.height(spacing.lg))
+            SectionLabel(text = "PRÓXIMOS DIAS")
+            Spacer(Modifier.height(spacing.xs))
+            Text(
+                text = "Previsão de 5 dias",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White,
+            )
+            Spacer(Modifier.height(spacing.md))
+        }
 
         when (val state = uiState) {
             is UiState.Loading -> {
@@ -63,11 +65,20 @@ fun ForecastScreen(
             }
             is UiState.Error -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = state.message, color = Color.White)
+                    Text(
+                        text = state.message,
+                        color = Color.White.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = spacing.md),
+                    )
                 }
             }
             is UiState.Success -> {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = spacing.md),
+                ) {
                     items(state.data) { day ->
                         ForecastRow(
                             day = day.toDsModel(isCelsius),
@@ -75,6 +86,7 @@ fun ForecastScreen(
                         )
                         Spacer(Modifier.height(spacing.sm))
                     }
+                    item { Spacer(Modifier.height(spacing.sm)) }
                 }
             }
         }
